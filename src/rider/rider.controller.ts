@@ -14,7 +14,9 @@ import { CreateRiderDto } from './dto/create-rider.dto';
 import { SendOTPDto } from './dto/send-otp.dto';
 import { UpdateRiderDto } from './dto/update-rider.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('riders')
 @Controller('riders')
 export class RiderController {
   constructor(private readonly riderService: RiderService) {}
@@ -43,12 +45,12 @@ export class RiderController {
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getRiderProfile(@Request() req) {
-    return req.user;
+    return this.riderService.findOne(req.user.phone);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.riderService.findOne(+id);
+  @Get('phone')
+  findOne(@Param('phone') phone: string) {
+    return this.riderService.findOne(phone);
   }
 
   @Patch(':id')

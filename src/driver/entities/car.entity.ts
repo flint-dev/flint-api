@@ -25,9 +25,9 @@ export class Car {
   @Column({ nullable: true })
   heading: number;
 
-  @OneToMany(() => Order, (order: Order) => order.car, { cascade: true })
+  @OneToMany(() => Order, (order: Order) => order.car)
   orders: Order[];
 
-  @OneToOne(() => Driver, (driver: Driver) => driver.car, { cascade: true })
+  @OneToOne(() => Driver, (driver: Driver) => driver.car)
   driver: Driver;
 }

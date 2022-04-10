@@ -22,9 +22,7 @@ export class RiderService {
       where: { phone: createRiderDto.phone, code: createRiderDto.otp },
     });
     if (!otp) throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
-    const userExists = await this.ridersRepository.findOne({
-      where: { phone: createRiderDto.phone },
-    });
+    const userExists = await this.findOne(createRiderDto.phone);
     if (!userExists)
       throw new HttpException(
         'User Already Exists, Please Login',
@@ -44,9 +42,7 @@ export class RiderService {
     const otp = await this.otpsRepository.findOne({
       where: { code },
     });
-    const user = await this.ridersRepository.findOne({
-      where: { phone: username },
-    });
+    const user = await this.findOne(username);
     if (!otp) throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
     if (otp.phone !== username) return null;
     if (otp.isRedeemed)
@@ -63,7 +59,9 @@ export class RiderService {
     };
   }
 
-  async signIn(rider: Rider) {
+  async signIn(rider: Rider): Promise<{
+    access_token: string;
+  }> {
     const payload = { phone: rider.phone, sub: rider };
     return {
       access_token: this.jwtService.sign(payload),
@@ -75,9 +73,7 @@ export class RiderService {
     while (await this.otpsRepository.findOne({ where: { code } })) {
       code = Math.floor(Math.random() * 100000);
     }
-    const user = await this.ridersRepository.findOne({
-      where: { phone: sendOTPDto.phone },
-    });
+    const user = await this.findOne(sendOTPDto.phone);
 
     let res: Message;
     switch (sendOTPDto.type) {
@@ -126,8 +122,10 @@ export class RiderService {
     return `This action returns all rider`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} rider`;
+  async findOne(phone: string) {
+    return await this.ridersRepository.findOne({
+      where: { phone },
+    });
   }
 
   update(id: number, updateRiderDto: UpdateRiderDto) {

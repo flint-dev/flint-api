@@ -13,6 +13,6 @@ export class Order {
   @ManyToOne(() => Car, (car: Car) => car.orders, { cascade: true })
   car: Car;
 
-  @ManyToOne(() => Rider, (rider: Rider) => rider.orders, { cascade: true })
+  @ManyToOne(() => Rider, (rider: Rider) => rider.orders)
   rider: Rider;
 }

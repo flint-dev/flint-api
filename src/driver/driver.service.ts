@@ -28,7 +28,7 @@ export class DriverService {
     return null;
   }
 
-  async login(user: Driver) {
+  async login(user: Driver): Promise<{ access_token: string }> {
     const payload = {
       username: user.email,
       sub: {
@@ -41,7 +41,9 @@ export class DriverService {
     };
   }
 
-  async create(createDriverDto: CreateDriverDto) {
+  async create(
+    createDriverDto: CreateDriverDto,
+  ): Promise<{ access_token: string }> {
     if (createDriverDto.password !== createDriverDto.confirmPassword)
       throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
     createDriverDto.password = await bcrypt.hash(createDriverDto.password, 8);
