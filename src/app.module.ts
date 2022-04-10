@@ -7,6 +7,10 @@ import { AppService } from './app.service';
 import { OTP } from './rider/entities/otp.entity';
 import { Rider } from './rider/entities/rider.entity';
 import { RiderModule } from './rider/rider.module';
+import { DriverModule } from './driver/driver.module';
+import { Driver } from './driver/entities/driver.entity';
+import { Order } from './rider/entities/order.entity';
+import { Car } from './driver/entities/car.entity';
 
 @Module({
   imports: [
@@ -18,9 +22,10 @@ import { RiderModule } from './rider/rider.module';
       port: 5432,
       username: 'postgres',
       database: 'test',
-      entities: [Rider, OTP],
+      entities: [Rider, OTP, Driver, Order, Car],
       synchronize: true,
     }),
+    DriverModule,
   ],
   controllers: [AppController],
   providers: [AppService],

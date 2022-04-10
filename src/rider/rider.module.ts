@@ -12,12 +12,13 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   controllers: [RiderController],
   imports: [
-    TypeOrmModule.forFeature([Rider, OTP]),
+    TypeOrmModule.forFeature([Rider, OTP, Rider]),
     PassportModule,
     JwtModule.register({
       secret: 'jwtConst',
     }),
   ],
+  exports: [TypeOrmModule],
   providers: [RiderService, LocalStrategy, JwtStrategy],
 })
 export class RiderModule {}

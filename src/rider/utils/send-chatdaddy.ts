@@ -1,11 +1,5 @@
 import { makeAccessTokenFactory, Scope } from '@chatdaddy/service-auth-client';
-import {
-  ChatsApi,
-  Configuration,
-  ContactsApi,
-  MessageComposeStatusEnum,
-  MessagesApi,
-} from '@chatdaddy/service-im-client';
+import { Configuration, MessagesApi } from '@chatdaddy/service-im-client';
 
 /**
  * Example
@@ -21,9 +15,7 @@ const run = async (to: string, message: string) => {
     request: {
       refreshToken: REFRESH_TOKEN,
       // get access to send messages, and read chats
-      scopes: [
-        Scope.MessagesSendToAll,
-      ],
+      scopes: [Scope.MessagesSendToAll],
     },
   });
 
@@ -31,16 +23,18 @@ const run = async (to: string, message: string) => {
 
   const messagesApi = new MessagesApi(new Configuration({ accessToken }));
   try {
-    return (await messagesApi.messagesPost(
-      'random',
-      `${to}@s.whatsapp.net`,
-      false,
-      false,
-      false,
-      {
-        text: message,
-      },
-    )).data[0];
+    return (
+      await messagesApi.messagesPost(
+        'random',
+        `${to}@s.whatsapp.net`,
+        false,
+        false,
+        false,
+        {
+          text: message,
+        },
+      )
+    ).data[0];
   } catch (error) {
     console.log(error);
   }

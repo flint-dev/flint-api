@@ -1,9 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Order } from './order.entity';
 
 @Entity()
 export class Rider {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -16,4 +17,7 @@ export class Rider {
 
   @Column({ default: false })
   isActive: boolean;
+
+  @OneToMany(() => Order, (order: Order) => order.rider, { cascade: true })
+  orders: Order[];
 }
