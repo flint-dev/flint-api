@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as argon from 'argon2';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDriverDto } from './dto/create-driver.dto';
@@ -20,7 +20,7 @@ export class DriverService {
         `Driver with email ${username} not found`,
         HttpStatus.NOT_FOUND,
       );
-    if (user && bcrypt.compare(pass, user.password)) {
+    if (user && (await argon.verify(user.password, pass))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
@@ -46,7 +46,7 @@ export class DriverService {
   ): Promise<{ access_token: string }> {
     if (createDriverDto.password !== createDriverDto.confirmPassword)
       throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
-    createDriverDto.password = await bcrypt.hash(createDriverDto.password, 8);
+    createDriverDto.password = await argon.hash(createDriverDto.password);
     const existingUser = await this.findOne(createDriverDto.email);
     if (existingUser)
       throw new HttpException('User already Exist', HttpStatus.CONFLICT);
