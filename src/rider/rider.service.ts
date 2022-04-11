@@ -23,7 +23,7 @@ export class RiderService {
     });
     if (!otp) throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
     const userExists = await this.findOne(createRiderDto.phone);
-    if (!userExists)
+    if (userExists)
       throw new HttpException(
         'User Already Exists, Please Login',
         HttpStatus.CONFLICT,
