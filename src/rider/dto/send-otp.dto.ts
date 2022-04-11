@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsEnum, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsEnum, IsPhoneNumber } from 'class-validator';
 
 export enum OTPType {
   EMAIL = 'EMAIL',
@@ -11,7 +11,7 @@ export class SendOTPDto {
   @IsNotEmpty()
   type: string;
 
-  @IsString()
+  @IsPhoneNumber()
   phone: string;
 
   @IsEmail()
