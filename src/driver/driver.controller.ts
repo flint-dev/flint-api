@@ -23,7 +23,7 @@ export class DriverController {
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
   async login(@Request() req) {
-    return req.user;
+    return this.driverService.login(req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -33,7 +33,7 @@ export class DriverController {
   }
 
   @Post()
-  create(@Body() createDriverDto: CreateDriverDto) {
+  create(@Body() createDriverDto: CreateDriverDto & { salt: string }) {
     return this.driverService.create(createDriverDto);
   }
 

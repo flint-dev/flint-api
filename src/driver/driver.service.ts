@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as argon from 'argon2';
+import { randomBytes, pbkdf2Sync } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDriverDto } from './dto/create-driver.dto';
@@ -20,9 +20,12 @@ export class DriverService {
         `Driver with email ${username} not found`,
         HttpStatus.NOT_FOUND,
       );
-    if (user && (await argon.verify(user.password, pass))) {
+    const newHash = pbkdf2Sync(pass, user.salt, 1000, 64, 'sha256').toString(
+      'hex',
+    );
+    if (user && newHash === user.password) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
+      const { password, salt, ...result } = user;
       return result;
     }
     return null;
@@ -42,11 +45,18 @@ export class DriverService {
   }
 
   async create(
-    createDriverDto: CreateDriverDto,
+    createDriverDto: CreateDriverDto & { salt: string },
   ): Promise<{ access_token: string }> {
     if (createDriverDto.password !== createDriverDto.confirmPassword)
       throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
-    createDriverDto.password = await argon.hash(createDriverDto.password);
+    createDriverDto.salt = randomBytes(16).toString('hex');
+    createDriverDto.password = pbkdf2Sync(
+      createDriverDto.password,
+      createDriverDto.salt,
+      1000,
+      64,
+      'sha256',
+    ).toString('hex');
     const existingUser = await this.findOne(createDriverDto.email);
     if (existingUser)
       throw new HttpException('User already Exist', HttpStatus.CONFLICT);

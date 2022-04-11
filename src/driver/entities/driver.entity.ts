@@ -23,6 +23,10 @@ export class Driver {
   @Exclude()
   password: string;
 
+  @Column()
+  @Exclude()
+  salt: string;
+
   @Expose()
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;

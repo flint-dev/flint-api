@@ -18,9 +18,10 @@ import { Car } from './driver/entities/car.entity';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'flint-1.cfdzyhfkuvzq.eu-west-2.rds.amazonaws.com',
       port: 5432,
       username: 'postgres',
+      password: '71dSR8k5NhjS2RGBJlyT',
       database: 'test',
       entities: [Rider, OTP, Driver, Order, Car],
       synchronize: true,
