@@ -26,7 +26,7 @@ export class DriverController {
     return this.driverService.login(req.user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt:driver'))
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;

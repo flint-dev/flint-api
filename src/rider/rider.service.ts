@@ -73,7 +73,6 @@ export class RiderService {
     while (await this.otpsRepository.findOne({ where: { code } })) {
       code = Math.floor(Math.random() * 100000);
     }
-    const user = await this.findOne(sendOTPDto.phone);
 
     let res: Message;
     switch (sendOTPDto.type) {
@@ -100,8 +99,7 @@ export class RiderService {
       default:
         break;
     }
-    if (!res)
-      return `Could not send OTP to ${sendOTPDto.email || sendOTPDto.phone}`;
+    if (!res) return `Could not send OTP to ${sendOTPDto.phone}`;
     const existingOTP = await this.otpsRepository.findOne({
       where: { phone: sendOTPDto?.phone },
     });
@@ -110,12 +108,9 @@ export class RiderService {
     const otp = this.otpsRepository.create({
       code,
       phone: sendOTPDto.phone,
-      email: sendOTPDto.email,
     });
     await this.otpsRepository.save(otp);
-    return {
-      user,
-    };
+    return;
   }
 
   findAll() {

@@ -8,7 +8,7 @@ export class CreateRiderDto {
   phone: string;
 
   @IsEmail()
-  email: string;
+  email?: string;
 
   @IsString()
   name: string;

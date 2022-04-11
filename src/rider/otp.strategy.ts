@@ -4,7 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { RiderService } from './rider.service';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategy extends PassportStrategy(Strategy, 'otp') {
   constructor(private riderService: RiderService) {
     super({
       usernameField: 'phone',
@@ -18,7 +18,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       parseInt(password),
     );
     if (otp.code != parseInt(password)) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(password);
     }
     return user;
   }

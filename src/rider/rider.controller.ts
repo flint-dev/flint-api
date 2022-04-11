@@ -14,7 +14,7 @@ import { CreateRiderDto } from './dto/create-rider.dto';
 import { SendOTPDto } from './dto/send-otp.dto';
 import { UpdateRiderDto } from './dto/update-rider.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('riders')
 @Controller('riders')
@@ -26,9 +26,10 @@ export class RiderController {
     return this.riderService.create(createRiderDto);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(AuthGuard('otp'))
   @Post('/auth/login')
   login(@Request() req) {
+    console.log(req.user);
     return this.riderService.signIn(req.user);
   }
 
@@ -42,7 +43,7 @@ export class RiderController {
     return this.riderService.findAll();
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt:rider'))
   @Get('profile')
   getRiderProfile(@Request() req) {
     return this.riderService.findOne(req.user.phone);

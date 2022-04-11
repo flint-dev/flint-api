@@ -1,12 +1,9 @@
-import { IsNotEmpty, IsEmail, IsPhoneNumber } from 'class-validator';
+import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 
 export class SignInRiderDto {
   @IsNotEmpty()
   otp: string;
 
-  @IsPhoneNumber()
+  @IsString()
   phone: string;
-
-  @IsEmail()
-  email: string;
 }

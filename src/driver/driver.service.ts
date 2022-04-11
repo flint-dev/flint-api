@@ -14,7 +14,7 @@ export class DriverService {
     private jwtService: JwtService,
   ) {}
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.findOne(username);
+    const user = await this._findOne(username);
     if (!user)
       throw new HttpException(
         `Driver with email ${username} not found`,
@@ -57,7 +57,7 @@ export class DriverService {
       64,
       'sha256',
     ).toString('hex');
-    const existingUser = await this.findOne(createDriverDto.email);
+    const existingUser = await this._findOne(createDriverDto.email);
     if (existingUser)
       throw new HttpException('User already Exist', HttpStatus.CONFLICT);
     const user = this.driversRepository.create(createDriverDto);
@@ -69,7 +69,15 @@ export class DriverService {
     return `This action returns all driver`;
   }
 
-  findOne(email: string) {
+  async findOne(email: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { salt, password, ...result } = await this.driversRepository.findOne({
+      where: { email },
+    });
+    return result;
+  }
+
+  private _findOne(email: string) {
     return this.driversRepository.findOne({ where: { email } });
   }
 
