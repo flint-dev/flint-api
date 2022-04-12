@@ -17,7 +17,9 @@ export class RiderService {
     @InjectRepository(OTP) private otpsRepository: Repository<OTP>,
     private jwtService: JwtService,
   ) {}
-  async create(createRiderDto: CreateRiderDto) {
+  async create(createRiderDto: CreateRiderDto): Promise<{
+    access_token: string;
+  }> {
     const otp = await this.otpsRepository.findOne({
       where: { phone: createRiderDto.phone, code: createRiderDto.otp },
     });
@@ -99,7 +101,11 @@ export class RiderService {
       default:
         break;
     }
-    if (!res) return `Could not send OTP to ${sendOTPDto.phone}`;
+    if (!res)
+      throw new HttpException(
+        `Could not send OTP to ${sendOTPDto.phone}`,
+        HttpStatus.EXPECTATION_FAILED,
+      );
     const existingOTP = await this.otpsRepository.findOne({
       where: { phone: sendOTPDto?.phone },
     });
@@ -117,7 +123,7 @@ export class RiderService {
     return `This action returns all rider`;
   }
 
-  async findOne(phone: string) {
+  async findOne(phone: string): Promise<Rider> {
     return await this.ridersRepository.findOne({
       where: { phone },
     });
