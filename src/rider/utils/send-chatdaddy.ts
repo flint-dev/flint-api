@@ -22,22 +22,18 @@ const run = async (to: string, message: string) => {
   const { token: accessToken } = await getAccessToken(TEAM_ID);
 
   const messagesApi = new MessagesApi(new Configuration({ accessToken }));
-  try {
-    return (
-      await messagesApi.messagesPost(
-        'random',
-        `${to}@s.whatsapp.net`,
-        false,
-        false,
-        false,
-        {
-          text: message,
-        },
-      )
-    ).data[0];
-  } catch (error) {
-    console.log(error);
-  }
+  return (
+    await messagesApi.messagesPost(
+      'random',
+      `${to}@s.whatsapp.net`,
+      false,
+      false,
+      false,
+      {
+        text: message,
+      },
+    )
+  ).data[0];
 };
 
 export default run;
