@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class OTP {
@@ -16,4 +21,7 @@ export class OTP {
 
   @Column({ default: false, type: 'boolean', nullable: false })
   isRedeemed: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

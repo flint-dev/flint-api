@@ -1,5 +1,13 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Car } from './car.entity';
 
 @Entity()
@@ -36,5 +44,12 @@ export class Driver {
   isActive: boolean;
 
   @OneToOne(() => Car, (car: Car) => car.driver, { cascade: true })
+  @JoinColumn({ name: 'carId' })
   car: Car;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

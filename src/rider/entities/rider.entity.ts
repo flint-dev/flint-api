@@ -1,5 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Order } from './order.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Order } from '../../order/entities/order.entity';
 
 @Entity()
 export class Rider {
@@ -20,4 +27,10 @@ export class Rider {
 
   @OneToMany(() => Order, (order: Order) => order.rider, { cascade: true })
   orders: Order[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
