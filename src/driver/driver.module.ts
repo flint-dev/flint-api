@@ -16,9 +16,9 @@ import { Car } from './entities/car.entity';
     TypeOrmModule.forFeature([Driver, Car]),
     PassportModule,
     JwtModule.register({
-      secret: 'jwtConstants.secret',
+      secret: 'test-jwt-key',
     }),
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, DriverService],
 })
 export class DriverModule {}

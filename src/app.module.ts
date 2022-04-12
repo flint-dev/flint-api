@@ -9,8 +9,9 @@ import { Rider } from './rider/entities/rider.entity';
 import { RiderModule } from './rider/rider.module';
 import { DriverModule } from './driver/driver.module';
 import { Driver } from './driver/entities/driver.entity';
-import { Order } from './rider/entities/order.entity';
+import { Order } from './order/entities/order.entity';
 import { Car } from './driver/entities/car.entity';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { Car } from './driver/entities/car.entity';
       synchronize: true,
     }),
     DriverModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
