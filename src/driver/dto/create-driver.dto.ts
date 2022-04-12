@@ -1,4 +1,9 @@
-import { IsNotEmpty, IsEmail, IsPhoneNumber } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsPhoneNumber, IsEnum } from 'class-validator';
+
+class CarTypes {
+  TYPE_1 = 'TYPE_1';
+  TYPE_2 = 'TYPE_2';
+}
 
 export class CreateDriverDto {
   @IsNotEmpty()
@@ -15,6 +20,9 @@ export class CreateDriverDto {
 
   @IsNotEmpty()
   password: string;
+
+  @IsEnum(CarTypes)
+  carType: string;
 
   @IsNotEmpty()
   confirmPassword: string;

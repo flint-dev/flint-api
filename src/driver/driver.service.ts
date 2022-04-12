@@ -6,11 +6,13 @@ import { Repository } from 'typeorm';
 import { CreateDriverDto } from './dto/create-driver.dto';
 import { UpdateDriverDto } from './dto/update-driver.dto';
 import { Driver } from './entities/driver.entity';
+import { Car } from './entities/car.entity';
 
 @Injectable()
 export class DriverService {
   constructor(
     @InjectRepository(Driver) private driversRepository: Repository<Driver>,
+    @InjectRepository(Car) private carsRepository: Repository<Car>,
     private jwtService: JwtService,
   ) {}
   async validateUser(username: string, pass: string): Promise<any> {
@@ -62,6 +64,12 @@ export class DriverService {
       throw new HttpException('User already Exist', HttpStatus.CONFLICT);
     const user = this.driversRepository.create(createDriverDto);
     await this.driversRepository.save(user);
+    // Create Car for Driver
+    const car = this.carsRepository.create({
+      type: createDriverDto.carType,
+      driver: user,
+    });
+    await this.carsRepository.save(car);
     return this.validateUser(user.email, createDriverDto.confirmPassword);
   }
 
@@ -75,6 +83,12 @@ export class DriverService {
       where: { email },
     });
     return result;
+  }
+
+  async findOneCar(carId: string) {
+    return await this.carsRepository.findOne({
+      where: { id: carId },
+    });
   }
 
   private _findOne(email: string) {
