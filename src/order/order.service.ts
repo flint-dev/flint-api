@@ -32,7 +32,7 @@ export class OrderService {
   }
 
   update(id: string, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+    return `This action updates a #${id}, ${updateOrderDto} order`;
   }
 
   remove(id: number) {

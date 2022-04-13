@@ -104,7 +104,7 @@ export class DriverService {
   }
 
   update(id: number, updateDriverDto: UpdateDriverDto) {
-    return `This action updates a #${id} driver`;
+    return `This action updates a #${id}, ${updateDriverDto} driver`;
   }
 
   remove(id: number) {

@@ -1,9 +1,4 @@
-import { IsDecimal, IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
-
-class OrderTypes {
-  TYPE_1 = 'TYPE_1';
-  TYPE_2 = 'TYPE_2';
-}
+import { IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
