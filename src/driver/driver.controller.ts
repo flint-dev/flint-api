@@ -59,7 +59,7 @@ export class DriverController {
   @ApiResponse({ type: Driver })
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user;
+    return this.driverService.findOne(req.user.email);
   }
 
   @Post()

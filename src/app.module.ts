@@ -19,10 +19,17 @@ import { OrderModule } from './order/order.module';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'flint-1.cfdzyhfkuvzq.eu-west-2.rds.amazonaws.com',
+      // host: '',
+      host:
+        process.env.NODE_ENV === 'production'
+          ? 'flint-1.cfdzyhfkuvzq.eu-west-2.rds.amazonaws.com'
+          : 'localhost',
       port: 5432,
       username: 'postgres',
-      password: '71dSR8k5NhjS2RGBJlyT',
+      password:
+        process.env.NODE_ENV === 'production'
+          ? '71dSR8k5NhjS2RGBJlyT'
+          : undefined,
       database: 'test',
       entities: [Rider, OTP, Driver, Order, Car],
       synchronize: true,

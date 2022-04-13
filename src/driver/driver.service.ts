@@ -35,7 +35,7 @@ export class DriverService {
 
   async login(user: Driver): Promise<{ access_token: string }> {
     const payload = {
-      username: user.email,
+      email: user.email,
       sub: {
         fullName: user.fullName,
         id: user.id,
@@ -70,7 +70,7 @@ export class DriverService {
       driver: user,
     });
     await this.carsRepository.save(car);
-    return this.validateUser(user.email, createDriverDto.confirmPassword);
+    return this.login(user);
   }
 
   findAll() {
@@ -78,11 +78,19 @@ export class DriverService {
   }
 
   async findOne(email: string) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { salt, password, ...result } = await this.driversRepository.findOne({
-      where: { email },
-    });
-    return result;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { salt, password, ...result } =
+        await this.driversRepository.findOneOrFail({
+          where: { email },
+        });
+      return result;
+    } catch (error) {
+      throw new HttpException(
+        `Driver with email [${email}] not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   async findOneCar(carId: string) {

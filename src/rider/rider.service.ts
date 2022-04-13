@@ -45,12 +45,12 @@ export class RiderService {
       where: { code },
     });
     const user = await this.findOne(username);
-    if (!otp) throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
+    if (!otp) throw new HttpException('Invalid OTP', HttpStatus.UNAUTHORIZED);
     if (otp.phone !== username) return null;
     if (otp.isRedeemed)
       throw new HttpException(
         'OTP has already been used',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.UNAUTHORIZED,
       );
 
     otp.isRedeemed = true;
@@ -75,6 +75,17 @@ export class RiderService {
     while (await this.otpsRepository.findOne({ where: { code } })) {
       code = Math.floor(Math.random() * 100000);
     }
+    const existingOTP = await this.otpsRepository.findOne({
+      where: { phone: sendOTPDto?.phone },
+    });
+
+    if (existingOTP) this.otpsRepository.delete(existingOTP.id);
+    const otp = this.otpsRepository.create({
+      code,
+      phone: sendOTPDto.phone,
+    });
+    await this.otpsRepository.save(otp);
+    if (process.env.NODE_ENV === 'test') return code;
 
     let res: Message;
     switch (sendOTPDto.type) {
@@ -106,16 +117,7 @@ export class RiderService {
         `Could not send OTP to ${sendOTPDto.phone}`,
         HttpStatus.EXPECTATION_FAILED,
       );
-    const existingOTP = await this.otpsRepository.findOne({
-      where: { phone: sendOTPDto?.phone },
-    });
 
-    if (existingOTP) this.otpsRepository.delete(existingOTP.id);
-    const otp = this.otpsRepository.create({
-      code,
-      phone: sendOTPDto.phone,
-    });
-    await this.otpsRepository.save(otp);
     return;
   }
 

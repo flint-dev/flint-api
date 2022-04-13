@@ -8,6 +8,8 @@ import {
   Delete,
   Request,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { RiderService } from './rider.service';
 import { CreateRiderDto } from './dto/create-rider.dto';
@@ -82,7 +84,7 @@ export class RiderController {
 
   @Post('/otp')
   @ApiAcceptedResponse()
-  sendOTP(@Body() sendOTP: SendOTPDto) {
+  async sendOTP(@Body() sendOTP: SendOTPDto) {
     return this.riderService.sendOTP(sendOTP);
   }
 
@@ -100,8 +102,10 @@ export class RiderController {
 
   @ApiResponse({ type: Rider })
   @Get(':phone')
-  findOne(@Param('phone') phone: string) {
-    return this.riderService.findOne(phone);
+  async findOne(@Param('phone') phone: string) {
+    const rider = await this.riderService.findOne(phone);
+    if (rider) return rider;
+    throw new HttpException('Rider not found', HttpStatus.NOT_FOUND);
   }
 
   @Patch(':id')
