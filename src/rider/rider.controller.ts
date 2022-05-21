@@ -88,6 +88,7 @@ export class RiderController {
     return this.riderService.sendOTP(sendOTP);
   }
 
+  @UseGuards(AuthGuard('jwt:rider'))
   @Get()
   findAll() {
     return this.riderService.findAll();
@@ -101,6 +102,7 @@ export class RiderController {
   }
 
   @ApiResponse({ type: Rider })
+  @UseGuards(AuthGuard('jwt:rider'))
   @Get(':phone')
   async findOne(@Param('phone') phone: string) {
     const rider = await this.riderService.findOne(phone);
@@ -108,13 +110,15 @@ export class RiderController {
     throw new HttpException('Rider not found', HttpStatus.NOT_FOUND);
   }
 
+  @UseGuards(AuthGuard('jwt:rider'))
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRiderDto: UpdateRiderDto) {
     return this.riderService.update(+id, updateRiderDto);
   }
 
+  @UseGuards(AuthGuard('jwt:rider'))
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.riderService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.riderService.remove(id);
   }
 }

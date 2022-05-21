@@ -135,7 +135,8 @@ export class RiderService {
     return `This action updates a #${id} rider, data: ${updateRiderDto}`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} rider`;
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    return this.ridersRepository.delete({ id:  user.id });
   }
 }
