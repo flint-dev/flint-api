@@ -9,7 +9,7 @@ import { Configuration, MessagesApi } from '@chatdaddy/service-im-client';
 
 const run = async (to: string, message: string) => {
   const REFRESH_TOKEN = '43a4c641-801b-46f6-a53a-994f5d94e0c7';
-  const TEAM_ID = 'b53095bb-3f68-48b9-bb4e-24b7cae3ec46';
+  const TEAM_ID = '25c88641-d8de-4bc5-86ab-a0f29ec4cacd';
 
   const getAccessToken = makeAccessTokenFactory({
     request: {
