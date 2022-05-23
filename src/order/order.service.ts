@@ -24,11 +24,11 @@ export class OrderService {
   }
 
   findAll() {
-    return `This action returns all order`;
+    return this.ordersRepository.find();
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} order`;
+    return this.ordersRepository.findOne(id);
   }
 
   update(id: string, updateOrderDto: UpdateOrderDto) {
